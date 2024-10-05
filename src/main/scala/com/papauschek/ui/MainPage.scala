@@ -39,6 +39,8 @@ class MainPage:
 
   private val resultRow = dom.document.getElementById("result-row").asInstanceOf[Div]
   private val refineRow = dom.document.getElementById("refine-row").asInstanceOf[Div]
+  private val crosswordName = dom.document.getElementById("crossword-name").asInstanceOf[Div]
+  private val crosswordNameInput = dom.document.getElementById("crossword-name-input")
   private val cluesRow = dom.document.getElementById("clues-row").asInstanceOf[Div]
   
   generateButton.addEventListener("click", { _ => generateSolution() })
@@ -46,6 +48,12 @@ class MainPage:
 
   def generateJson(): Unit = {
       val words = inputElement.value.split("\n").map(_.trim).filter(_.nonEmpty).toSeq
+      val longestWord = inputElement.value
+        .split("\n")            
+        .map(_.trim)            
+        .filter(_.nonEmpty)     
+        .flatMap(_.split("\\s+")) 
+        .maxByOption(_.length)  
       val bonusWords = bonusInputElement.value.split("\n").map(_.trim).filter(_.nonEmpty).toSeq
       val annotation = initialPuzzle.getAnnotation
 
@@ -60,8 +68,8 @@ class MainPage:
       }
   
       val jsonObject = js.Dynamic.literal(
-        "Name" -> "",
-        "Letters" -> "",
+        "Name" -> crosswordNameInput.asInstanceOf[Input].value,
+        "Letters" -> longestWord.getOrElse(""),
         "Words" -> words.toJSArray,
         "Position" -> positions.toJSArray,
         "Bonus Words" -> bonusWords.toJSArray
@@ -109,6 +117,7 @@ class MainPage:
           generateButton.classList.remove("invisible")
           resultRow.classList.remove("invisible")
           refineRow.classList.remove("invisible")
+          crosswordName.classList.remove("invisible")
           cluesRow.classList.remove("invisible")
           initialPuzzle = puzzles.maxBy(_.density)
           refinedPuzzle = initialPuzzle

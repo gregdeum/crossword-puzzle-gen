@@ -1349,6 +1349,8 @@ function $c_Lcom_papauschek_ui_MainPage() {
   this.Lcom_papauschek_ui_MainPage__f_heightInputElement = null;
   this.Lcom_papauschek_ui_MainPage__f_resultRow = null;
   this.Lcom_papauschek_ui_MainPage__f_refineRow = null;
+  this.Lcom_papauschek_ui_MainPage__f_crosswordName = null;
+  this.Lcom_papauschek_ui_MainPage__f_crosswordNameInput = null;
   this.Lcom_papauschek_ui_MainPage__f_cluesRow = null;
   var $$x1 = $m_Lcom_papauschek_puzzle_Puzzle$();
   $m_Lcom_papauschek_puzzle_PuzzleConfig$();
@@ -1374,6 +1376,8 @@ function $c_Lcom_papauschek_ui_MainPage() {
   document.getElementById("language-select");
   this.Lcom_papauschek_ui_MainPage__f_resultRow = document.getElementById("result-row");
   this.Lcom_papauschek_ui_MainPage__f_refineRow = document.getElementById("refine-row");
+  this.Lcom_papauschek_ui_MainPage__f_crosswordName = document.getElementById("crossword-name");
+  this.Lcom_papauschek_ui_MainPage__f_crosswordNameInput = document.getElementById("crossword-name-input");
   this.Lcom_papauschek_ui_MainPage__f_cluesRow = document.getElementById("clues-row");
   this.Lcom_papauschek_ui_MainPage__f_generateButton.addEventListener("click", ((_$1) => {
     this.generateSolution__V()
@@ -1493,7 +1497,8 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateJson__V = (function() {
   };
   var xs$1 = new ($d_T.getArrayOf().constr)(jsElems);
   var words = $m_sc_ArrayOps$().toIndexedSeq$extension__O__sci_IndexedSeq(xs$1);
-  var this$15 = $as_T(this.Lcom_papauschek_ui_MainPage__f_bonusInputElement.value);
+  var $$x19 = $m_s_Predef$();
+  var this$15 = $as_T(this.Lcom_papauschek_ui_MainPage__f_inputElement.value);
   var xs$2 = $f_T__split__T__I__AT(this$15, "\n", 0);
   var f$1 = ((_$5) => {
     var _$5$1 = $as_T(_$5);
@@ -1595,7 +1600,160 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateJson__V = (function() {
     i$3 = ((1 + i$3) | 0)
   };
   var xs$3 = new ($d_T.getArrayOf().constr)(jsElems$1);
-  var bonusWords = $m_sc_ArrayOps$().toIndexedSeq$extension__O__sci_IndexedSeq(xs$3);
+  var capacity$2 = 0;
+  var jsElems$2 = null;
+  capacity$2 = 0;
+  jsElems$2 = [];
+  var i$4 = 0;
+  while ((i$4 < xs$3.u.length)) {
+    var arg1$16 = xs$3.get(i$4);
+    var _$7 = $as_T(arg1$16);
+    var arg1$17 = $f_T__split__T__I__AT(_$7, "\\s+", 0);
+    var xs$4 = $m_s_Predef$().wrapRefArray__AO__scm_ArraySeq$ofRef(arg1$17);
+    var it = $ct_sc_ArrayOps$ArrayIterator__O__(new $c_sc_ArrayOps$ArrayIterator(), xs$4.scm_ArraySeq$ofRef__f_array);
+    while (it.hasNext__Z()) {
+      var elem = it.next__O();
+      var unboxedElem$2 = ((elem === null) ? null : elem);
+      jsElems$2.push(unboxedElem$2)
+    };
+    i$4 = ((1 + i$4) | 0)
+  };
+  var this$33 = $$x19.wrapRefArray__AO__scm_ArraySeq$ofRef(new ($d_T.getArrayOf().constr)(jsElems$2));
+  var cmp = $m_s_math_Ordering$Int$();
+  if ($f_sc_SeqOps__isEmpty__Z(this$33)) {
+    var longestWord = $m_s_None$()
+  } else {
+    if ($f_sc_SeqOps__isEmpty__Z(this$33)) {
+      throw $ct_jl_UnsupportedOperationException__T__(new $c_jl_UnsupportedOperationException(), "empty.maxBy")
+    };
+    var elem$1 = null;
+    elem$1 = null;
+    var elem$2 = null;
+    elem$2 = null;
+    var elem$3 = false;
+    elem$3 = true;
+    var it$1 = $ct_sc_ArrayOps$ArrayIterator__O__(new $c_sc_ArrayOps$ArrayIterator(), this$33.scm_ArraySeq$ofRef__f_array);
+    while (it$1.hasNext__Z()) {
+      var arg1$18 = it$1.next__O();
+      var _$8 = $as_T(arg1$18);
+      var fx = _$8.length;
+      if (elem$3) {
+        var $$x20 = true
+      } else {
+        var y = elem$1;
+        var $$x20 = $f_s_math_Ordering__gt__O__O__Z(cmp, fx, y)
+      };
+      if ($$x20) {
+        elem$2 = arg1$18;
+        elem$1 = fx;
+        elem$3 = false
+      }
+    };
+    var longestWord = new $c_s_Some(elem$2)
+  };
+  var this$37 = $as_T(this.Lcom_papauschek_ui_MainPage__f_bonusInputElement.value);
+  var xs$5 = $f_T__split__T__I__AT(this$37, "\n", 0);
+  var f$2 = ((_$9) => {
+    var _$9$1 = $as_T(_$9);
+    return $f_T__trim__T(_$9$1)
+  });
+  var len$2 = xs$5.u.length;
+  var ys$2 = new ($d_T.getArrayOf().constr)(len$2);
+  if ((len$2 > 0)) {
+    var i$5 = 0;
+    if ((xs$5 !== null)) {
+      while ((i$5 < len$2)) {
+        var $$x21 = i$5;
+        var arg1$19 = xs$5.get(i$5);
+        ys$2.set($$x21, f$2(arg1$19));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_I)) {
+      var x3$2 = $asArrayOf_I(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x22 = i$5;
+        var arg1$20 = x3$2.get(i$5);
+        ys$2.set($$x22, f$2(arg1$20));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_D)) {
+      var x4$2 = $asArrayOf_D(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x23 = i$5;
+        var arg1$21 = x4$2.get(i$5);
+        ys$2.set($$x23, f$2(arg1$21));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_J)) {
+      var x5$2 = $asArrayOf_J(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x24 = i$5;
+        var t$2 = x5$2.get(i$5);
+        var lo$2 = t$2.RTLong__f_lo;
+        var hi$2 = t$2.RTLong__f_hi;
+        ys$2.set($$x24, f$2(new $c_RTLong(lo$2, hi$2)));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_F)) {
+      var x6$2 = $asArrayOf_F(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x25 = i$5;
+        var arg1$22 = x6$2.get(i$5);
+        ys$2.set($$x25, f$2(arg1$22));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_C)) {
+      var x7$2 = $asArrayOf_C(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x26 = i$5;
+        var arg1$23 = x7$2.get(i$5);
+        ys$2.set($$x26, f$2($bC(arg1$23)));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_B)) {
+      var x8$2 = $asArrayOf_B(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x27 = i$5;
+        var arg1$24 = x8$2.get(i$5);
+        ys$2.set($$x27, f$2(arg1$24));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_S)) {
+      var x9$2 = $asArrayOf_S(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x28 = i$5;
+        var arg1$25 = x9$2.get(i$5);
+        ys$2.set($$x28, f$2(arg1$25));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else if ((xs$5 instanceof $ac_Z)) {
+      var x10$2 = $asArrayOf_Z(xs$5, 1);
+      while ((i$5 < len$2)) {
+        var $$x29 = i$5;
+        var arg1$26 = x10$2.get(i$5);
+        ys$2.set($$x29, f$2(arg1$26));
+        i$5 = ((1 + i$5) | 0)
+      }
+    } else {
+      throw new $c_s_MatchError(xs$5)
+    }
+  };
+  var capacity$3 = 0;
+  var jsElems$3 = null;
+  capacity$3 = 0;
+  jsElems$3 = [];
+  var i$6 = 0;
+  while ((i$6 < ys$2.u.length)) {
+    var x$2 = ys$2.get(i$6);
+    var _$10 = $as_T(x$2);
+    if ((_$10 !== "")) {
+      var unboxedElem$3 = ((x$2 === null) ? null : x$2);
+      jsElems$3.push(unboxedElem$3)
+    };
+    i$6 = ((1 + i$6) | 0)
+  };
+  var xs$6 = new ($d_T.getArrayOf().constr)(jsElems$3);
+  var bonusWords = $m_sc_ArrayOps$().toIndexedSeq$extension__O__sci_IndexedSeq(xs$6);
   var annotation = this.Lcom_papauschek_ui_MainPage__f_initialPuzzle.getAnnotation__sci_Map();
   var positions = $as_sci_Iterable(annotation.flatMap__F1__O(new $c_sjsr_AnonFunction1(((x$1$1) => {
     var x$1$2 = $as_T2(x$1$1);
@@ -1604,27 +1762,29 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateJson__V = (function() {
       var annotatedPoints = $as_sci_Seq(x$1$2.T2__f__2);
       return $as_sci_Seq(annotatedPoints.map__F1__O(new $c_sjsr_AnonFunction1(((anno) => {
         var anno$1 = $as_Lcom_papauschek_puzzle_AnnotatedPoint(anno);
-        var $$x21 = $m_sr_ScalaRunTime$();
+        var $$x32 = $m_sr_ScalaRunTime$();
         var value = $m_Lcom_papauschek_puzzle_Point$().x$extension__I__I(point);
-        var $$x20 = new $c_T2("X", value);
+        var $$x31 = new $c_T2("X", value);
         var value$1 = $m_Lcom_papauschek_puzzle_Point$().y$extension__I__I(point);
-        var $$x19 = new $c_T2("Y", value$1);
-        var y = (anno$1.Lcom_papauschek_puzzle_AnnotatedPoint__f_vertical ? "v" : "h");
-        var fields = $$x21.wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x20, $$x19, new $c_T2("Direction", y)]));
+        var $$x30 = new $c_T2("Y", value$1);
+        var y$1 = (anno$1.Lcom_papauschek_puzzle_AnnotatedPoint__f_vertical ? "v" : "h");
+        var fields = $$x32.wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x31, $$x30, new $c_T2("Direction", y$1)]));
         return $m_sjs_js_special_package$().objectLiteral__sci_Seq__sjs_js_Object(fields)
       }))))
     };
     throw new $c_s_MatchError(x$1$2)
   }))));
-  var $$x26 = $m_sr_ScalaRunTime$();
-  var $$x25 = new $c_T2("Name", "");
-  var $$x24 = new $c_T2("Letters", "");
-  var y$1 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(words);
-  var $$x23 = new $c_T2("Words", y$1);
-  var y$2 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(positions);
-  var $$x22 = new $c_T2("Position", y$2);
-  var y$3 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(bonusWords);
-  var fields$1 = $$x26.wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x25, $$x24, $$x23, $$x22, new $c_T2("Bonus Words", y$3)]));
+  var $$x37 = $m_sr_ScalaRunTime$();
+  var s = $as_T(this.Lcom_papauschek_ui_MainPage__f_crosswordNameInput.value);
+  var $$x36 = new $c_T2("Name", s);
+  var s$1 = $as_T((longestWord.isEmpty__Z() ? "" : longestWord.get__O()));
+  var $$x35 = new $c_T2("Letters", s$1);
+  var y$2 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(words);
+  var $$x34 = new $c_T2("Words", y$2);
+  var y$3 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(positions);
+  var $$x33 = new $c_T2("Position", y$3);
+  var y$4 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(bonusWords);
+  var fields$1 = $$x37.wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x36, $$x35, $$x34, $$x33, new $c_T2("Bonus Words", y$4)]));
   var jsonObject = $m_sjs_js_special_package$().objectLiteral__sci_Seq__sjs_js_Object(fields$1);
   var jsonString = $as_T(JSON.stringify(jsonObject));
   this.downloadJson__T__T__V(jsonString, "crossword.json")
@@ -1674,10 +1834,11 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateSolution__V = (function() {
       this.Lcom_papauschek_ui_MainPage__f_generateButton.classList.remove("invisible");
       this.Lcom_papauschek_ui_MainPage__f_resultRow.classList.remove("invisible");
       this.Lcom_papauschek_ui_MainPage__f_refineRow.classList.remove("invisible");
+      this.Lcom_papauschek_ui_MainPage__f_crosswordName.classList.remove("invisible");
       this.Lcom_papauschek_ui_MainPage__f_cluesRow.classList.remove("invisible");
-      var f$1 = new $c_sjsr_AnonFunction1(((_$7) => {
-        var _$7$1 = $as_Lcom_papauschek_puzzle_Puzzle(_$7);
-        return _$7$1.Lcom_papauschek_puzzle_Puzzle__f_density
+      var f$1 = new $c_sjsr_AnonFunction1(((_$11) => {
+        var _$11$1 = $as_Lcom_papauschek_puzzle_Puzzle(_$11);
+        return _$11$1.Lcom_papauschek_puzzle_Puzzle__f_density
       }));
       var cmp = $m_s_math_Ordering$DeprecatedDoubleOrdering$();
       this.Lcom_papauschek_ui_MainPage__f_initialPuzzle = $as_Lcom_papauschek_puzzle_Puzzle($f_sc_IterableOnceOps__maxBy__F1__s_math_Ordering__O(puzzles$1, f$1, cmp));
