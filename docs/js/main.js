@@ -1774,11 +1774,12 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateJson__V = (function() {
     };
     throw new $c_s_MatchError(x$1$2)
   }))));
+  var crosswordNameValue = $f_T__trim__T($as_T(this.Lcom_papauschek_ui_MainPage__f_crosswordNameInput.value));
+  var fileName = ((crosswordNameValue === "") ? "crossword.json" : (("crossword " + crosswordNameValue) + ".json"));
   var $$x37 = $m_sr_ScalaRunTime$();
-  var s = $as_T(this.Lcom_papauschek_ui_MainPage__f_crosswordNameInput.value);
-  var $$x36 = new $c_T2("Name", s);
-  var s$1 = $as_T((longestWord.isEmpty__Z() ? "" : longestWord.get__O()));
-  var $$x35 = new $c_T2("Letters", s$1);
+  var $$x36 = new $c_T2("Name", crosswordNameValue);
+  var s = $as_T((longestWord.isEmpty__Z() ? "" : longestWord.get__O()));
+  var $$x35 = new $c_T2("Letters", s);
   var y$2 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(words);
   var $$x34 = new $c_T2("Words", y$2);
   var y$3 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(positions);
@@ -1786,8 +1787,8 @@ $c_Lcom_papauschek_ui_MainPage.prototype.generateJson__V = (function() {
   var y$4 = $m_sjs_js_JSConverters$JSRichIterableOnce$().toJSArray$extension__sc_IterableOnce__sjs_js_Array(bonusWords);
   var fields$1 = $$x37.wrapRefArray__AO__sci_ArraySeq(new ($d_T2.getArrayOf().constr)([$$x36, $$x35, $$x34, $$x33, new $c_T2("Bonus Words", y$4)]));
   var jsonObject = $m_sjs_js_special_package$().objectLiteral__sci_Seq__sjs_js_Object(fields$1);
-  var jsonString = $as_T(JSON.stringify(jsonObject));
-  this.downloadJson__T__T__V(jsonString, "crossword.json")
+  var jsonString = $as_T(JSON.stringify(jsonObject, (void 0), 2));
+  this.downloadJson__T__T__V(jsonString, fileName)
 });
 $c_Lcom_papauschek_ui_MainPage.prototype.downloadJson__T__T__V = (function(content, filename) {
   var blob = new Blob([content], (() => {

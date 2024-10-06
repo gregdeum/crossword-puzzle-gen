@@ -66,18 +66,25 @@ class MainPage:
           )
         }
       }
+
+      val crosswordNameValue = crosswordNameInput.asInstanceOf[Input].value.trim
+      val fileName = if (crosswordNameValue.isEmpty) {
+        "crossword.json"
+      } else {
+        s"crossword $crosswordNameValue.json"
+      }
   
       val jsonObject = js.Dynamic.literal(
-        "Name" -> crosswordNameInput.asInstanceOf[Input].value,
+        "Name" -> crosswordNameValue,
         "Letters" -> longestWord.getOrElse(""),
         "Words" -> words.toJSArray,
         "Position" -> positions.toJSArray,
         "Bonus Words" -> bonusWords.toJSArray
       )
   
-      val jsonString = JSON.stringify(jsonObject)
+      val jsonString = JSON.stringify(jsonObject, space = 2)
   
-      downloadJson(jsonString, "crossword.json")
+      downloadJson(jsonString, fileName)
     }
 
   def downloadJson(content: String, filename: String): Unit = {
