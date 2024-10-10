@@ -1,5 +1,5 @@
 package com.papauschek.ui
-
+import scala.util.Random
 import com.papauschek.puzzle.{Puzzle, PuzzleConfig, PuzzleWords}
 import com.papauschek.ui.{Globals, HtmlRenderer}
 import org.scalajs.dom
@@ -59,11 +59,20 @@ class MainPage:
 
       val positions = annotation.flatMap { case (point, annotatedPoints) =>
         annotatedPoints.map { anno =>
-          js.Dynamic.literal(
-            "X" -> point.x,
-            "Y" -> point.y,
-            "Direction" -> (if (anno.vertical) "v" else "h")
+          val (x, y) = if (anno.word.startsWith("!")) {
+        if (anno.vertical) (point.x, point.y + 1) else (point.x + 1, point.y)
+          } else {
+        (point.x, point.y)
+          }
+          val position = js.Dynamic.literal(
+        "X" -> x,
+        "Y" -> y,
+        "Direction" -> (if (anno.vertical) "v" else "h")
           )
+          if (anno.word.startsWith("!")) {
+        position.updateDynamic("Separated")(true)
+          }
+          position
         }
       }
 
@@ -108,9 +117,26 @@ class MainPage:
   /** read the words from the user interface and generate the puzzle in the background using web workers */
   def generateSolution(): Unit =
     val rawInputWords = inputElement.value.linesIterator.map(normalizeWord).toSeq
-    val inputWords = rawInputWords.filter(word => word.nonEmpty && !word.startsWith("#"))
+    val updatedWords: Seq[String] = if (rawInputWords.nonEmpty && rawInputWords.last.startsWith("!")) {
+      val randomIndex = Random.nextInt(rawInputWords.size)
+      
+      val lastWord = rawInputWords.last.zipWithIndex.map {
+        case (char, index) if index > 0 => '-'
+        case (char, _) => char
+      }.mkString
+
+      rawInputWords
+        .updated(randomIndex, rawInputWords(randomIndex) + "!")
+        .updated(rawInputWords.size - 1, lastWord)
+
+    } else {
+      rawInputWords
+    }
+  
+    val inputWords = updatedWords.filter(word => word.nonEmpty && !word.startsWith("#"))
     if (inputWords.nonEmpty) {
       mainInputWords = PuzzleWords.sortByBest(inputWords)
+      println(mainInputWords)
       val puzzleConfig = PuzzleConfig(
         width = widthInputElement.valueAsNumber.toInt,
         height = heightInputElement.valueAsNumber.toInt
