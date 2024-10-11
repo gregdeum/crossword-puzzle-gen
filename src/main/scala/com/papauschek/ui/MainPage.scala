@@ -47,7 +47,12 @@ class MainPage:
   downloadJsonButton.addEventListener("click", { _ => generateJson() })
 
   def generateJson(): Unit = {
-      val words = inputElement.value.split("\n").map(_.trim).filter(_.nonEmpty).toSeq
+      val words = inputElement.value
+        .split("\n")
+        .map(_.trim)
+        .filter(_.nonEmpty)
+        .map(word => if (word.startsWith("!")) word.substring(1) else word)
+        .toSeq
       val longestWord = inputElement.value
         .split("\n")            
         .map(_.trim)            
@@ -59,8 +64,8 @@ class MainPage:
 
       val positions = annotation.flatMap { case (point, annotatedPoints) =>
         annotatedPoints.map { anno =>
-          val (x, y) = if (anno.word.startsWith("!")) {
-        if (anno.vertical) (point.x, point.y + 1) else (point.x + 1, point.y)
+          val (x, y) = if (anno.word.startsWith("-")) {
+        if (anno.vertical) (point.x, point.y + 0) else (point.x + 0, point.y)
           } else {
         (point.x, point.y)
           }
@@ -69,12 +74,12 @@ class MainPage:
         "Y" -> y,
         "Direction" -> (if (anno.vertical) "v" else "h")
           )
-          if (anno.word.startsWith("!")) {
+          if (anno.word.startsWith("-")) {
         position.updateDynamic("Separated")(true)
           }
           position
         }
-      }
+      }.toSeq.sortBy(p => if (p.hasOwnProperty("Separated")) 1 else 0)
 
       val crosswordNameValue = crosswordNameInput.asInstanceOf[Input].value.trim
       val fileName = if (crosswordNameValue.isEmpty) {
@@ -123,7 +128,7 @@ class MainPage:
       val lastWord = rawInputWords.last.zipWithIndex.map {
         case (char, index) if index > 0 => '-'
         case (char, _) => char
-      }.mkString
+      }.patch(1, " ", 0).mkString
 
       rawInputWords
         .updated(randomIndex, rawInputWords(randomIndex) + "!")
